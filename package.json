@@ -1,0 +1,32 @@
+{
+  "name": "chainlink-rwa-real-estate",
+  "version": "0.1.0",
+  "description": "A reference architecture showing how to use Chainlink products (Data Feeds, Proof of Reserve, Functions + AI, Automation, CCIP, VRF, CRE) with tokenized real estate and construction-finance RWAs.",
+  "license": "MIT",
+  "scripts": {
+    "build": "hardhat compile",
+    "test": "hardhat test",
+    "clean": "hardhat clean",
+    "lint": "solhint \"contracts/**/*.sol\"",
+    "node": "hardhat node"
+  },
+  "keywords": [
+    "chainlink",
+    "rwa",
+    "real-estate",
+    "tokenization",
+    "proof-of-reserve",
+    "chainlink-functions",
+    "ccip",
+    "defi",
+    "solidity"
+  ],
+  "devDependencies": {
+    "@chainlink/contracts": "^1.4.0",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^5.1.0",
+    "dotenv": "^16.4.5",
+    "hardhat": "^2.22.17",
+    "solhint": "^5.0.3"
+  }
+}
