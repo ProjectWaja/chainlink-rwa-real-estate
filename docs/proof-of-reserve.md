@@ -18,11 +18,16 @@ If an issuer tries to mint tokens beyond the appraised, attested value of the un
 property portfolio, the transaction reverts. Holders get an on-chain, continuously-checkable
 guarantee instead of a press release.
 
-```
-     Appraiser / custodian                 Chainlink PoR feed            PropertyToken.sol
-     attests reserve value      ─────►      (AggregatorV3)      ◄─────    mint() reads feed
-     (off-chain, audited)                   answer = $12.4M                require(supply+amt
-                                                                                  <= reserves)
+```mermaid
+flowchart LR
+    A["Appraiser / custodian<br/>attests reserve value<br/>(off-chain, audited)"]
+    F["Chainlink PoR feed<br/>(AggregatorV3)<br/>answer = $12.4M"]
+    T["PropertyToken.sol<br/>mint() reads feed<br/>require(supply + amt ≤ reserves)"]
+    A -->|publishes attestation| F
+    F -->|read on every mint| T
+    style A fill:#6b7280,color:#fff,stroke:#4b5563
+    style F fill:#0ea5e9,color:#fff,stroke:#0284c7
+    style T fill:#10b981,color:#fff,stroke:#059669
 ```
 
 ## Design choices shown in the code

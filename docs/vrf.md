@@ -11,11 +11,21 @@ cryptographic proof.
 `AllocationLottery` collects entrants during a sale window, then requests randomness to select
 winners for the limited token allocation:
 
-```
-   investors enter ──► sale closes ──► requestRandomWords() ──► VRF DON
-                                                                   │ proof + random
-   winners selected  ◄── fulfillRandomWords(randomWords) ◄─────────┘
-   (deterministic shuffle seeded by the verified random word)
+```mermaid
+flowchart LR
+    E["investors enter"]
+    C["sale closes"]
+    R["requestRandomWords()"]
+    V["VRF DON<br/>proof + random word"]
+    F["fulfillRandomWords()<br/>store verified seed"]
+    W["winners selected<br/>deterministic shuffle from seed"]
+    E --> C --> R --> V --> F --> W
+    style E fill:#6b7280,color:#fff,stroke:#4b5563
+    style C fill:#6b7280,color:#fff,stroke:#4b5563
+    style R fill:#a855f7,color:#fff,stroke:#9333ea
+    style V fill:#a855f7,color:#fff,stroke:#9333ea
+    style F fill:#6366f1,color:#fff,stroke:#4f46e5
+    style W fill:#10b981,color:#fff,stroke:#059669
 ```
 
 The random word seeds a deterministic selection (e.g. a Fisher–Yates shuffle of entrants),

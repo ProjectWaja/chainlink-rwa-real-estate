@@ -8,22 +8,17 @@ key kept secret on the DON rather than exposed on-chain.
 
 ## The pattern
 
-```
-  PropertyValuationConsumer.sol            Chainlink DON                 AI / AVM provider
-  (on-chain)                               (off-chain)                   (off-chain HTTP API)
-        │                                       │                               │
-        │  requestValuation(propertyId)         │                               │
-        ├──────────────────────────────────────►│                               │
-        │   sends JS source + encrypted secrets  │   runs functions-source/      │
-        │                                        │   property-valuation.js       │
-        │                                        ├──────────────────────────────►│
-        │                                        │   POST address + features     │
-        │                                        │◄──────────────────────────────┤
-        │                                        │   { valuationUsd, confidence }│
-        │  fulfillRequest(valuationUsd)          │                               │
-        │◄───────────────────────────────────────┤                              │
-        │  store + push to RealEstateNAV          │                              │
-        ▼                                                                         
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as PropertyValuationConsumer (on-chain)
+    participant D as Chainlink DON (off-chain)
+    participant P as AI / AVM provider (HTTP API)
+    C->>D: requestValuation(propertyId) + JS source + encrypted secrets
+    D->>P: runs property-valuation.js — POST address + features
+    P-->>D: { valuationUsd, confidence }
+    D-->>C: fulfillRequest(valuationUsd)
+    Note over C: validate (confidence floor, deviation cap)<br/>then push to RealEstateNAV
 ```
 
 ## Two AI use cases in Cornerstone
@@ -50,7 +45,7 @@ you should treat an AI valuation as **one input, not gospel**:
 - **Keep humans/multisig in the loop** for large deltas (the contract can flag rather than
   auto-apply a >X% change).
 - **Don't put secrets on-chain.** The AI API key is uploaded to the DON as an encrypted
-  secret; `.env`'s `AI_VALUATION_API_KEY` is only used by the deploy script to upload it.
+  secret; `.env`'s `AI_VALUATION_API_KEY` is only used by the upload script to encrypt it.
 - AI output is **non-deterministic**. The JS pins model parameters (temperature 0, a strict
   JSON schema) so independent DON nodes converge on the same answer; without that, nodes may
   disagree and the request fails consensus. This is the single most important thing to get

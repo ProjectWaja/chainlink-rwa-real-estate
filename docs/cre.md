@@ -19,23 +19,21 @@ ad-hoc glue between services into one declarative, verifiable workflow.
 
 A single Cornerstone NAV update is not one call — it's a *sequence*:
 
-```
-   trigger (cron / event)
-        │
-        ▼
-   1. fetch latest appraisal + comps from an AVM/AI API     (off-chain compute)
-        │
-        ▼
-   2. fetch the attested reserve figure                     (off-chain compute)
-        │
-        ▼
-   3. sanity-check: new NAV within tolerance of last NAV?   (off-chain logic)
-        │
-        ▼
-   4. write NAV on chain A   +   mirror to chain B           (multi-chain write)
-        │
-        ▼
-   5. if reserves < supply  →  pause minting everywhere      (cross-chain action)
+```mermaid
+flowchart TD
+    T["trigger (cron / event)"]
+    S1["1 · fetch latest appraisal + comps<br/>from an AVM/AI API · off-chain compute"]
+    S2["2 · fetch the attested reserve figure<br/>off-chain compute"]
+    S3["3 · sanity-check: new NAV within<br/>tolerance of last NAV? · off-chain logic"]
+    S4["4 · write NAV on chain A + mirror to chain B<br/>multi-chain write"]
+    S5["5 · if reserves &lt; supply → pause minting<br/>everywhere · cross-chain action"]
+    T --> S1 --> S2 --> S3 --> S4 --> S5
+    style T fill:#f59e0b,color:#fff,stroke:#d97706
+    style S1 fill:#6b7280,color:#fff,stroke:#4b5563
+    style S2 fill:#6b7280,color:#fff,stroke:#4b5563
+    style S3 fill:#6366f1,color:#fff,stroke:#4f46e5
+    style S4 fill:#10b981,color:#fff,stroke:#059669
+    style S5 fill:#a855f7,color:#fff,stroke:#9333ea
 ```
 
 Doing this with separate Automation + Functions + CCIP contracts means a lot of on-chain

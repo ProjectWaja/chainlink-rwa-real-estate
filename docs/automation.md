@@ -14,11 +14,13 @@ off-chain (free, view); when an interval has elapsed *and* there is income to di
 returns `true` and the network calls `performUpkeep()` to snapshot the period and make the
 income claimable pro-rata.
 
-```
-   off-chain (free)                on-chain (paid, only when needed)
-   checkUpkeep() ── true ─────────► performUpkeep()
-   "interval elapsed AND                "lock this period's income for
-    undistributed income > 0?"           pull-based claims by holders"
+```mermaid
+flowchart LR
+    A["checkUpkeep() · off-chain, free<br/>interval elapsed AND<br/>undistributed income &gt; 0?"]
+    B["performUpkeep() · on-chain, paid<br/>lock this period's income for<br/>pull-based claims by holders"]
+    A -->|returns true| B
+    style A fill:#6b7280,color:#fff,stroke:#4b5563
+    style B fill:#f59e0b,color:#fff,stroke:#d97706
 ```
 
 ### 2. Milestone deadline enforcement — `ConstructionEscrow`

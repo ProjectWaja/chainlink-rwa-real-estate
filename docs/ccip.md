@@ -10,12 +10,15 @@ independent Risk Management Network).
 An investor holds funds on Chain A (say, a stablecoin on Base Sepolia) but the property token
 lives on Chain B (Arbitrum Sepolia). With `CrossChainInvestment`:
 
-```
-   Chain A (source)                         CCIP                    Chain B (destination)
-   CrossChainInvestment.sendInvestment()    lane + RMN              CrossChainInvestment
-        │  tokens + (propertyId, investor)  ───────────────►        ._ccipReceive()
-        │  via IRouterClient.ccipSend()                              credits the investor's
-        ▼  pays fee in LINK or native                                pending allocation on B
+```mermaid
+flowchart LR
+    A["Chain A · source<br/>CrossChainInvestment.sendInvestment()<br/>tokens + (propertyId, investor)<br/>via IRouterClient.ccipSend(), fee in LINK/native"]
+    L["CCIP<br/>lane + Risk Management Network"]
+    B["Chain B · destination<br/>CrossChainInvestment._ccipReceive()<br/>credits the investor's<br/>pending allocation on B"]
+    A --> L --> B
+    style A fill:#10b981,color:#fff,stroke:#059669
+    style L fill:#a855f7,color:#fff,stroke:#9333ea
+    style B fill:#0ea5e9,color:#fff,stroke:#0284c7
 ```
 
 The message carries **both tokens and data** (the `propertyId` and the beneficiary), so the
