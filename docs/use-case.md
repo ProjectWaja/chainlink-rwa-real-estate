@@ -24,38 +24,25 @@ USD/crypto exchange rate at settlement. That is precisely the gap Chainlink fill
 
 ## Lifecycle of a Cornerstone property
 
-```
-                    ┌─────────────────────────────────────────────────────────┐
-                    │  1. ORIGINATION                                          │
-                    │  Property appraised. Reserve attestation published to a  │
-                    │  Proof-of-Reserve feed. PropertyToken mint is capped by  │
-                    │  the attested reserves — you cannot mint unbacked tokens.│
-                    └─────────────────────────────────────────────────────────┘
-                                          │
-                                          ▼
-                    ┌─────────────────────────────────────────────────────────┐
-                    │  2. CONSTRUCTION                                         │
-                    │  Capital locked in ConstructionEscrow. An AI/AVM valued  │
-                    │  inspection (Chainlink Functions) confirms each milestone│
-                    │  before funds release. Automation enforces deadlines.    │
-                    └─────────────────────────────────────────────────────────┘
-                                          │
-                                          ▼
-                    ┌─────────────────────────────────────────────────────────┐
-                    │  3. VALUATION                                            │
-                    │  Chainlink Functions calls an AI valuation model (AVM)   │
-                    │  on a schedule (Automation) to refresh on-chain NAV.     │
-                    │  Data Feeds convert USD ⇆ crypto for any settlement.     │
-                    └─────────────────────────────────────────────────────────┘
-                                          │
-                                          ▼
-                    ┌─────────────────────────────────────────────────────────┐
-                    │  4. OPERATION                                            │
-                    │  Rental income streamed to token holders pro-rata,       │
-                    │  distributed automatically (Automation). Investors can   │
-                    │  arrive cross-chain via CCIP. Oversubscribed sales are   │
-                    │  allocated fairly with VRF.                              │
-                    └─────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    A["1 · ORIGINATION<br/>Property appraised. Reserve attestation published to a
+    Proof-of-Reserve feed. PropertyToken mint is capped by the attested
+    reserves — you cannot mint unbacked tokens."]
+    B["2 · CONSTRUCTION<br/>Capital locked in ConstructionEscrow. An AI/AVM-assisted
+    inspection (Chainlink Functions) confirms each milestone before funds
+    release. Automation enforces deadlines."]
+    C["3 · VALUATION<br/>Chainlink Functions calls an AI valuation model (AVM)
+    on a schedule (Automation) to refresh on-chain NAV. Data Feeds convert
+    USD ⇆ crypto for any settlement."]
+    D["4 · OPERATION<br/>Rental income streamed to token holders pro-rata,
+    distributed automatically (Automation). Investors arrive cross-chain via
+    CCIP. Oversubscribed sales are allocated fairly with VRF."]
+    A --> B --> C --> D
+    style A fill:#10b981,color:#fff,stroke:#059669
+    style B fill:#f59e0b,color:#fff,stroke:#d97706
+    style C fill:#6366f1,color:#fff,stroke:#4f46e5
+    style D fill:#a855f7,color:#fff,stroke:#9333ea
 ```
 
 ## Why each problem needs an oracle

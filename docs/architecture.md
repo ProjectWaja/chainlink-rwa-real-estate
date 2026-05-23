@@ -6,35 +6,34 @@ one). Nothing is a throwaway demo — every piece participates in the
 
 ## Contract map
 
-```
-                              ┌───────────────────────────┐
-                              │      PropertyToken         │  ERC-20 fractional ownership
-                              │  (token/PropertyToken.sol) │  ── PROOF OF RESERVE gates mint
-                              └─────────────┬──────────────┘
-                                            │ reads PoR feed
-                       ┌────────────────────┼─────────────────────┐
-                       │                    │                     │
-            ┌──────────▼─────────┐ ┌────────▼─────────┐ ┌─────────▼──────────┐
-            │   RealEstateNAV    │ │ RentalDistributor│ │ AllocationLottery  │
-            │ (oracle/…)         │ │ (distribution/…) │ │ (vrf/…)            │
-            │ DATA FEEDS:        │ │ AUTOMATION:      │ │ VRF: fair          │
-            │ USD⇆crypto, NAV    │ │ scheduled income │ │ allocation of an   │
-            └──────────▲─────────┘ └──────────────────┘ │ oversubscribed sale│
-                       │ writes NAV                     └────────────────────┘
-            ┌──────────┴───────────────┐
-            │ PropertyValuationConsumer │  FUNCTIONS + AI: AVM valuation,
-            │ (functions/…)             │  feeds result into RealEstateNAV
-            └──────────▲────────────────┘
-                       │ also verifies milestones
-            ┌──────────┴───────────────┐        ┌────────────────────────────┐
-            │   ConstructionEscrow      │        │   CrossChainInvestment      │
-            │ (escrow/…)                │        │   (ccip/…)                  │
-            │ FUNCTIONS verdict +       │        │   CCIP: invest from another │
-            │ AUTOMATION deadlines      │        │   chain (tokens + data)     │
-            └───────────────────────────┘        └────────────────────────────┘
+```mermaid
+flowchart TD
+    PT["PropertyToken · token/<br/>ERC-20 fractional ownership<br/>Proof of Reserve gates mint"]
+    NAV["RealEstateNAV · oracle/<br/>Data Feeds: USD⇆crypto, NAV"]
+    PVC["PropertyValuationConsumer · functions/<br/>Functions + AI: AVM valuation"]
+    ESC["ConstructionEscrow · escrow/<br/>Functions verdict + Automation deadlines"]
+    RD["RentalDistributor · distribution/<br/>Automation: scheduled pro-rata income"]
+    CCI["CrossChainInvestment · ccip/<br/>CCIP: invest from another chain (tokens + data)"]
+    VRF["AllocationLottery · vrf/<br/>VRF: fair allocation of oversubscribed sales"]
+    CRE["CRE workflow (conceptual)<br/>valuation → NAV → solvency → pause"]
 
-   Orchestration layer (conceptual): CRE workflow ties valuation→NAV→solvency→pause
-   into one program — see /cre and docs/cre.md.
+    PVC -->|writes valuation| NAV
+    PVC -->|verifies milestones| ESC
+    NAV -->|FX for settlement| PT
+    PT -->|pro-rata basis| RD
+    PT -->|allocates supply| VRF
+    CCI -->|credits investment| PT
+    CRE -.-> NAV
+    CRE -.-> PT
+
+    style PT fill:#10b981,color:#fff,stroke:#059669
+    style NAV fill:#0ea5e9,color:#fff,stroke:#0284c7
+    style PVC fill:#6366f1,color:#fff,stroke:#4f46e5
+    style ESC fill:#f59e0b,color:#fff,stroke:#d97706
+    style RD fill:#f59e0b,color:#fff,stroke:#d97706
+    style CCI fill:#a855f7,color:#fff,stroke:#9333ea
+    style VRF fill:#a855f7,color:#fff,stroke:#9333ea
+    style CRE fill:#6b7280,color:#fff,stroke:#4b5563
 ```
 
 ## Directory layout
